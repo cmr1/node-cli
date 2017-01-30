@@ -1,0 +1,29 @@
+{
+  "name": "cmr1-cli",
+  "version": "0.0.1",
+  "description": "Generic CLI class for NodeJS",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.spec.js",
+    "preversion": "travis lint .travis.yml",
+    "postversion": "git push --follow-tags"
+  },
+  "author": "Charlie McClung",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cmr1/cli-node.git"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "command-line-args": "^3.0.5",
+    "extend": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
