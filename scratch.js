@@ -18,7 +18,9 @@ const myCli = new Cli({
 	]
 });
 
-myCli.log('log');
+console.log(myCli);
+
+myCli.log('log', 2, {a:1, b:2});
 
 myCli.debug('debug');
 
