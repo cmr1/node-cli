@@ -20,18 +20,12 @@ describe('Cli', function() {
 			'--verbose'
 		];
 
-		testCli = new Cli({
-			optionDefinitions: [
-			  { name: 'option1', type: String, multiple: true, defaultOption: true },
-			  { name: 'option2', alias: 'o', type: Number }
-			]
-		});
+		testCli = new Cli();
 	});
 
 	it('should exist with expected structure', function() {
 		expect(testCli).to.exist;
 		expect(testCli.settings).to.be.an('object');
-		expect(testCli.optionDefinitions).to.be.an('array');
 		expect(testCli.options).to.be.an('object');
 	});
 
@@ -56,15 +50,13 @@ describe('Cli', function() {
 
 				this.sinon.restore();
 			}
-
-			
 		});
 	});
 
-    afterEach(function() {
-    	this.sinon.restore();
+  afterEach(function() {
+  	this.sinon.restore();
 
-    	process.argv = oldArgs;
-    	oldArgs = [];
-    });
+  	process.argv = oldArgs;
+  	oldArgs = [];
+  });
 });
