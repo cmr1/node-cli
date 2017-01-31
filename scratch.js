@@ -9,7 +9,8 @@ const myCli = new Cli({
 		},
 		test: {
 			prefix: 'TEST:',
-			color: 'blue'
+			color: 'blue',
+			throws: true
 		}
 	},
 	optionDefinitions: [
