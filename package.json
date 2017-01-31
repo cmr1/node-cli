@@ -1,7 +1,7 @@
 {
   "name": "cmr1-cli",
   "version": "0.0.5",
-  "description": "Generic CLI class for NodeJS",
+  "description": "Generic CLI helper",
   "main": "index.js",
   "directories": {
     "test": "test"
