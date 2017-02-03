@@ -49,3 +49,11 @@ additionalOptions.forEach(option => {
   myCli.log(`Option '${name}' = '${value}'`);
 });
 
+const username = myCli.prompt('Username: ');
+
+if (myCli.confirm(`Allow user: '${username}' to process file: ${myCli.options.src}?`)) {
+  myCli.success(`File: ${myCli.options.src} processed by user: '${username}'`);
+} else {
+  myCli.warn(`User: '${username}' not allowed to process file: ${myCli.options.src}`);
+}
+

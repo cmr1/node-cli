@@ -3,7 +3,7 @@
 const expect = require('chai').expect;
 const sinon = require('sinon');
 
-const Cli = require('../');
+const Cli = require('../../');
 
 describe('Cli', function() {
 	let oldArgs = [];
