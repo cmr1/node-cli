@@ -35,62 +35,171 @@ describe('Cli | Options', function() {
 		expect(presentDefaults).to.have.length(expectedDefaults.length);
 	});
 
-	it('should show help menu with help option & alias', function() {
-		const helpOptions = [
-			'--help', // Help option
-			'-h'      // Help option alias
-		];
+	describe('help', function() {
+		it('should show help menu with help option & alias', function() {
+			const options = [
+				'--help', // Help option
+				'-h'      // Help option alias
+			];
 
-		helpOptions.forEach(opt => {
-			this.sinon.stub(console, 'log');
-			this.sinon.stub(process, 'exit');
+			options.forEach(opt => {
+				this.sinon.stub(console, 'log');
+				this.sinon.stub(process, 'exit');
 
-			process.argv = Object.assign([], defaultArgs);
-			process.argv.push(opt);
+				process.argv = Object.assign([], defaultArgs);
+				process.argv.push(opt);
 
-			const testCli = new Cli();
-			
-			expect(console.log.called).to.be.true;
-			expect(process.exit.calledOnce).to.be.true;
+				const testCli = new Cli();
+				
+				expect(console.log.called).to.be.true;
+				expect(process.exit.calledOnce).to.be.true;
 
-	  	this.sinon.restore();
+		  	this.sinon.restore();
+			});
+		});
+
+		it('should print an error and show help menu for unknown options', function() {
+			const options = [
+				'--fake-option', // Unknown option
+				'-a',						 // Unknown option alias
+			];
+
+			options.forEach(opt => {
+				this.sinon.stub(console, 'error');
+				this.sinon.stub(console, 'log');
+				this.sinon.stub(process, 'exit');
+
+				process.argv = Object.assign([], defaultArgs);
+				process.argv.push(opt);
+
+				const testCli = new Cli();
+
+				expect(console.error.calledOnce).to.be.true;
+				expect(console.log.called).to.be.true;
+				expect(process.exit.calledOnce).to.be.true;
+
+		  	this.sinon.restore();
+			});
 		});
 	});
 
-	it('should print an error and show help menu for unknown options', function() {
-		const helpOptions = [
-			'--fake-option', // Unknown option
-			'-a',						 // Unknown option alias
-		];
-
-		helpOptions.forEach(opt => {
-			this.sinon.stub(console, 'error');
+	describe('force', function() {
+		it('should throw an error without force option & suppress exceptions with it', function() {
 			this.sinon.stub(console, 'log');
-			this.sinon.stub(process, 'exit');
 
-			process.argv = Object.assign([], defaultArgs);
-			process.argv.push(opt);
+			const testCli = new Cli({
+				logging: {
+					test: {
+						throws: true,
+					}
+				}
+			});
 
-			const testCli = new Cli();
-
-			expect(console.error.calledOnce).to.be.true;
+			expect(testCli.test).to.throw(Error);
 			expect(console.log.called).to.be.true;
-			expect(process.exit.calledOnce).to.be.true;
 
 	  	this.sinon.restore();
 		});
+
+		it('suppress exceptions if force option is set', function() {
+			const options = [
+				'--force', // Force option
+				'-f',			 // Force option alias
+			];
+
+			options.forEach(opt => {
+				this.sinon.stub(console, 'log');
+
+				process.argv = Object.assign([], defaultArgs);
+				process.argv.push(opt);
+
+				const testCli = new Cli({
+					logging: {
+						test: {
+							throws: true,
+						}
+					}
+				});
+
+				expect(testCli.options.force).to.be.true;
+
+				if (testCli.options.force) {
+					expect(testCli.test).to.not.throw(Error);
+				} else {
+					expect(testCli.test).to.throw(Error);
+				}
+
+				expect(console.log.called).to.be.true;
+
+		  	this.sinon.restore();
+			});
+		});
 	});
 
-	it('should throw an error without force option & suppress exceptions if force option is set', function() {
+	describe('quiet', function() {
+		it('should suppress all output', function() {
+			const options = [
+				'--quiet', // Quiet option
+				'-q',			 // Quiet option alias
+			];
 
+			options.forEach(opt => {
+				process.argv = Object.assign([], defaultArgs);
+				process.argv.push(opt);
+
+				const testCli = new Cli();
+
+				Object.keys(testCli.settings.logging).forEach(method => {
+					const methodConfig = testCli.settings.logging[method];
+					const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
+
+					this.sinon.stub(console, consoleMethod);
+
+					if (methodConfig.throws) {
+						expect(testCli[method]).to.not.throw(Error);
+					} else {
+						testCli[method](`Calling: ${method}`);						
+					}
+
+					expect(console[consoleMethod].called).to.be.false;
+
+		  		this.sinon.restore();
+				});
+			});
+		});
 	});
 
-	it('should suppress all output', function() {
+	describe('verbose', function() {
+		it('should allow all output including debug', function() {
+			const options = [
+				'--verbose', // Verbose option
+				'-v',			   // Verbose option alias
+			];
 
-	});
+			options.forEach(opt => {
+				process.argv = Object.assign([], defaultArgs);
+				process.argv.push(opt);
 
-	it('should allow all output including debug', function() {
+				const testCli = new Cli();
 
+				Object.keys(testCli.settings.logging).forEach(method => {
+					const methodConfig = testCli.settings.logging[method];
+					const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
+
+					this.sinon.stub(console, consoleMethod);
+
+					if (methodConfig.throws) {
+						expect(testCli[method]).to.throw(Error);
+					} else {
+						testCli[method](`Calling: ${method}`);						
+					}
+
+					expect(console[consoleMethod].called).to.be.true;
+
+		  		this.sinon.restore();
+				});
+			});
+		});
 	});
 
 	afterEach(function() {

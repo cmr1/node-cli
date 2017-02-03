@@ -1,62 +1,52 @@
-// 'use strict';
+'use strict';
 
-// const expect = require('chai').expect;
-// const sinon = require('sinon');
+const expect = require('chai').expect;
+const sinon = require('sinon');
 
-// const Cli = require('../');
+const Cli = require('../../');
 
-// describe('Cli', function() {
-// 	let oldArgs = [];
-// 	let testCli = null;
+describe('Cli | Logging', function() {
+	let oldArgs = [];
+	let testCli = null;
+  const defaultArgs = [
+    '/path/to/node',
+    '/path/to/file'
+  ];
 
-// 	beforeEach(function() {
-// 		this.sinon = sinon.sandbox.create();
+  beforeEach(function() {
+    this.sinon = sinon.sandbox.create();
 
-// 		oldArgs = process.argv;
+    oldArgs = process.argv;
+  });
 
-// 		process.argv = [
-// 			'/path/to/node',
-// 			'/path/to/file',
-// 			'--verbose'
-// 		];
+  it('should support default logging methods', function() {
+    process.argv = Object.assign([], defaultArgs);
+    process.argv.push('--verbose');
 
-// 		testCli = new Cli();
-// 	});
+    const testCli = new Cli();
 
-// 	it('should exist with expected structure', function() {
-// 		expect(testCli).to.exist;
-// 		expect(testCli.settings).to.be.an('object');
-// 		expect(testCli.options).to.be.an('object');
-// 	});
+    Object.keys(testCli.settings.logging).forEach(method => {
+      const methodConfig = testCli.settings.logging[method];
+      const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
 
-// 	it('should have dynamic logging functions', function() {
-// 		Object.keys(testCli.settings.logging).forEach(method => {
-// 			const methodConfig = testCli.settings.logging[method];
+      this.sinon.stub(console, consoleMethod);
 
-// 			expect(testCli[method]).to.be.a('function');
-			
-// 			const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
+      if (methodConfig.throws) {
+        expect(testCli[method]).to.throw(Error);
+      } else {
+        testCli[method](`Calling: ${method}`);            
+      }
 
-// 			if (testCli.options.verbose || methodConfig.verbose) {
-// 				this.sinon.stub(console, consoleMethod);
-			
-// 				if (methodConfig.throws) {
-// 					expect(testCli[method]).to.throw(Error);
-// 				} else {
-// 					expect(testCli[method]).to.not.throw(Error);
-// 				}
-				
-// 				expect(console[consoleMethod].calledOnce).to.be.true;
+      expect(console[consoleMethod].called).to.be.true;
 
-// 				this.sinon.restore();
-// 			}
-// 		});
-// 	});
+      this.sinon.restore();
+    });
+  });
 
-//   afterEach(function() {
-//   	this.sinon.restore();
+  afterEach(function() {
+  	this.sinon.restore();
 
-//   	process.argv = oldArgs;
-//   	oldArgs = [];
-//   });
-// });
+  	process.argv = oldArgs;
+  	oldArgs = [];
+  });
+});

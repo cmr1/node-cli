@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 const Cli = require('../../');
 
-describe('Cli', function() {
+describe('Cli | Main', function() {
 	let oldArgs = [];
 	let testCli = null;
 

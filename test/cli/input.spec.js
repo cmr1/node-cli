@@ -1,62 +1,60 @@
-// 'use strict';
+'use strict';
 
-// const expect = require('chai').expect;
-// const sinon = require('sinon');
+const expect = require('chai').expect;
+const sinon = require('sinon');
+const readLineSync = require('readline-sync');
 
-// const Cli = require('../');
+const Cli = require('../../');
 
-// describe('Cli', function() {
-// 	let oldArgs = [];
-// 	let testCli = null;
+describe('Cli | Input', function() {
+  let oldArgs = [];
 
-// 	beforeEach(function() {
-// 		this.sinon = sinon.sandbox.create();
+  const defaultArgs = [
+    '/path/to/node',
+    '/path/to/file'
+  ];
 
-// 		oldArgs = process.argv;
+  const inputMethods = [
+    {
+      cli: 'prompt',
+      rls: 'question'
+    },
+    {
+      cli: 'select',
+      rls: 'keyInSelect'
+    },
+    {
+      cli: 'confirm',
+      rls: 'keyInYN'
+    }
+  ];
 
-// 		process.argv = [
-// 			'/path/to/node',
-// 			'/path/to/file',
-// 			'--verbose'
-// 		];
+  beforeEach(function() {
+    this.sinon = sinon.sandbox.create();
 
-// 		testCli = new Cli();
-// 	});
+    oldArgs = process.argv;
+  });
 
-// 	it('should exist with expected structure', function() {
-// 		expect(testCli).to.exist;
-// 		expect(testCli.settings).to.be.an('object');
-// 		expect(testCli.options).to.be.an('object');
-// 	});
+  it('should have default cli input methods', function() {
+    const testCli = new Cli();
 
-// 	it('should have dynamic logging functions', function() {
-// 		Object.keys(testCli.settings.logging).forEach(method => {
-// 			const methodConfig = testCli.settings.logging[method];
+    inputMethods.forEach(methodConfig => {
+      expect(testCli[methodConfig.cli]).to.be.a('function');
+      
+      // this.sinon.stub(readLineSync, methodConfig.rls);
 
-// 			expect(testCli[method]).to.be.a('function');
-			
-// 			const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
+      // testCli[methodConfig.cli]();
 
-// 			if (testCli.options.verbose || methodConfig.verbose) {
-// 				this.sinon.stub(console, consoleMethod);
-			
-// 				if (methodConfig.throws) {
-// 					expect(testCli[method]).to.throw(Error);
-// 				} else {
-// 					expect(testCli[method]).to.not.throw(Error);
-// 				}
-				
-// 				expect(console[consoleMethod].calledOnce).to.be.true;
+      // expect(readLineSync[methodConfig.rls].called).to.be.true;
 
-// 				this.sinon.restore();
-// 			}
-// 		});
-// 	});
+      // this.sinon.restore();
+    });
+  });
 
-//   afterEach(function() {
-//   	this.sinon.restore();
+  afterEach(function() {
+    this.sinon.restore();
 
-//   	process.argv = oldArgs;
-//   	oldArgs = [];
-//   });
-// });
+    process.argv = oldArgs;
+    oldArgs = [];
+  });
+});
