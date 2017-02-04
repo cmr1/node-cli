@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "mocha test/**/*.spec.js",
-    "preversion": "travis lint .travis.yml && ./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md",
+    "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md",
+    "preversion": "travis lint .travis.yml && npm run doc",
     "postversion": "git push --follow-tags"
   },
   "author": "Charlie McClung",
