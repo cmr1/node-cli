@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha test/**/*.spec.js",
-    "preversion": "travis lint .travis.yml",
+    "preversion": "travis lint .travis.yml && ./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md",
     "postversion": "git push --follow-tags"
   },
   "author": "Charlie McClung",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "jsdoc": "^3.4.3",
     "mocha": "^3.2.0",
     "sinon": "^1.17.7"
   }
