@@ -1,0 +1,58 @@
+{
+  "name": "Node CLI",
+  "description": "No description",
+  "helpHeader": "Options",
+  "allowForceNoThrow": true,
+  "logging": {
+    "log": {
+      "stamp": true,
+      "prefix": "",
+      "color": "white"
+    },
+    "warn": {
+      "stamp": true,
+      "throws": false,
+      "prefix": "WARN:",
+      "color": "yellow"
+    },
+    "error": {
+      "stamp": true,
+      "throws": true,
+      "prefix": "ERROR:",
+      "color": "red"
+    },
+    "debug": {
+      "stamp": true,
+      "verbose": true,
+      "prefix": "DEBUG:",
+      "color": "cyan"
+    },
+    "success": {
+      "stamp": true,
+      "prefix": "SUCCESS:",
+      "color": "green"
+    }
+  },
+  "optionDefinitions": [
+    {
+      "name": "help",
+      "alias": "h",
+      "description": "Print this usage guide."
+    },
+    {
+      "name": "force",
+      "alias": "f",
+      "description": "Ignore \"throws\" flag on logging methods."
+    },
+    {
+      "name": "quiet",
+      "alias": "q",
+      "description": "Surpress all log output"
+    },
+    {
+      "name": "verbose",
+      "alias": "v",
+      "description": "Show debugging output."
+    }
+  ]
+}
