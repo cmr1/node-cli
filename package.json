@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha test/**/*.spec.js",
-    "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md",
+    "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md && git add docs && git commit -m 'Generated Docs'",
     "preversion": "travis lint .travis.yml && npm run doc",
     "postversion": "git push --follow-tags"
   },
@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cmr1/cli-node.git"
+    "url": "https://github.com/cmr1/node-cli.git"
   },
   "dependencies": {
     "colors": "^1.1.2",

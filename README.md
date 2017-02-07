@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cmr1/cli-node.svg?branch=master)](https://travis-ci.org/cmr1/cli-node)
+[![Build Status](https://travis-ci.org/cmr1/node-cli.svg?branch=master)](https://travis-ci.org/cmr1/node-cli)
 
 # cli-node
 NodeJS CLI module

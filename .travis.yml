@@ -11,4 +11,4 @@ deploy:
     secure: X3cJ2u05miDm8N9ozlixopgPmentGsyE2a9MrA1kUE7SBaiPiS/ENLNND0oxb/6wKFySgESP/KQvhQ/+y+tcaukW3IURN0+j34tESEQw+8JFyqouEiJ0GPSuIr7zMsNGZxxrLjEpov55udGisSoyKZYlQppjSkZN1/KSdjbWTtHXB+jExpViHeBrH1Do8H5kiTqEDHyJq7s3wwkrYuCyFjdHKhnM/gWzswwaco66aBRz1kpgdPhhKpcj7D8hw0QNZX2SJxyHgJTW4Rmir1I4+cMqBLw9WdDC4jW3sndn6DgCaF809rQY8LTszcBVNdrPbJ3RrtlLKufUvbY3pLk0X3tv/nOP2VwuQOCDoLHc83FJlUpYIxhJ2G0oV/h3SaMpd8srlx7ICWoCK5qlds9iMaYYedFwAFar8aZqwAgHfZubzi3x6MhlSv+NaByhBA1KKuoU4/d90z6+byUzWW3YKtw7yuxqFi2KsUg8WG9Qi9e/YDVjbLasMDB8H25H9lHYP+qZh4SHUG8MkBlR3k76P79JbNlZbCyhEdQ6YsAnaOrHfC47Qf7vADRTpWDvniv24IMj6+S3RBkpWMMW3cGq/9POJ1Nv8EVGy9/USBLyD0xcjaOoPHooSxxsTX5LxFMThVE6t6jW5xiTvnOrln5u+QS81cFllaFW1yur/qaAPVc=
   on:
     tags: true
-    repo: cmr1/cli-node
+    repo: cmr1/node-cli
