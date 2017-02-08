@@ -43,12 +43,12 @@
     {
       "name": "help",
       "alias": "h",
-      "description": "Print this usage guide."
+      "description": "Print this usage guide"
     },
     {
       "name": "force",
       "alias": "f",
-      "description": "Ignore \"throws\" flag on logging methods."
+      "description": "Ignore \"throws\" flag on logging methods"
     },
     {
       "name": "quiet",
@@ -58,7 +58,7 @@
     {
       "name": "verbose",
       "alias": "v",
-      "description": "Show debugging output."
+      "description": "Show debugging output"
     }
   ]
 }
