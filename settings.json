@@ -1,7 +1,9 @@
 {
   "name": "Node CLI",
+  "version": "0.0.1",
   "description": "No description",
   "helpHeader": "Options",
+  "helpSections": {},
   "allowForceNoThrow": true,
   "logging": {
     "log": {
@@ -34,6 +36,10 @@
     }
   },
   "optionDefinitions": [
+    {
+      "name": "version",
+      "description": "Show current version"
+    },
     {
       "name": "help",
       "alias": "h",

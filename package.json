@@ -19,6 +19,7 @@
     "url": "https://github.com/cmr1/node-cli.git"
   },
   "dependencies": {
+    "cmr1-logger": "0.0.x",
     "colors": "^1.1.2",
     "command-line-args": "^3.0.5",
     "command-line-usage": "^4.0.0",
