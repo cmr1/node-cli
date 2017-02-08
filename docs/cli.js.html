@@ -31,8 +31,8 @@
 // Require extend for merging settings
 const extend = require('extend');
 
-// Require colors (in safe mode) for dynamic logging with color
-const colors = require('colors/safe');
+// Require basic Logger class to extend from
+const Logger = require('cmr1-logger');
 
 // Require command-line-args to parse options from process.argv
 const clArgs = require('command-line-args');
@@ -46,13 +46,14 @@ const readLineSync = require('readline-sync');
 /**
  * Cli Helper Class
  */
-class Cli {
+class Cli extends Logger {
 
   /**
    * Create a Cli object
    * @param {object} settings - The settings for this Cli object
    */
   constructor(settings = {}) {
+    super();
 
     // Most things happen here, wrap it all up
     try {
@@ -70,7 +71,7 @@ class Cli {
       this.mergeSettings(settings);
 
       // Enable the logging based on settings
-      this.enableLogging();
+      this.enableLogging(this.settings.logging);
 
       // Parse and set options based on settings
       this.setOptions();
@@ -108,6 +109,8 @@ class Cli {
     // Show the help menu &amp; exit the process
     if (this.options.help) {
       this.showHelp();
+    } else if (this.options.version) {
+      this.showVersion();
     }
   }
 
@@ -164,72 +167,6 @@ class Cli {
   }
 
   /**
-   * Enable the logging functions as defined by the settings
-   */
-  enableLogging() {
-
-    // Only attempt to enable logging from an object definition
-    if (typeof this.settings.logging === 'object') {
-
-      // Loop through logging settings by method (function name)
-      Object.keys(this.settings.logging).forEach(method => {
-
-        // Get the current method configuration from the logging settings by method
-        const methodConfig = this.settings.logging[method];
-
-        // Don't allow provided setting to override existing properties
-        if (typeof this[method] !== 'undefined') {
-          throw new Error(`Cannot override method for logging: '${method}' ... it already exists!`);
-        }
-
-        // Create the logging method as a function on the current Cli instance
-        this[method] = (...args) => {
-
-          // Determine whether or not to show the message
-          //  - If method isn't verbose only OR verbose flag is set
-          //  - AND
-          //  - The quiet flag is NOT set
-          if ((!methodConfig.verbose || this.options.verbose) &amp;&amp; !this.options.quiet) {
-
-            // Get the console method to be used for this logging function
-            // Check to see if the "console" object has the same function, otherwise just use "log"
-            const consoleMethod = (typeof console[method] === 'function' ? console[method] : console['log']);
-
-            // Get the prefix from method config, otherwise set it to blank
-            const prefix = (typeof methodConfig.prefix === 'string' ? methodConfig.prefix : '');
-
-            // Get the color from the method config, otherwise set it to blank
-            const color = (typeof colors[methodConfig.color] === 'function' ? methodConfig.color : '');
-
-            // Create the output variable
-            let output = Cli.colorize(args, color);
-
-            // If a prefix is set, prepend it to the previously created output
-            if (prefix.trim() !== '') {
-              output = Cli.colorize([prefix], color).concat(output);
-            }
-
-            // If the stamp flag is set, prepend the output with a timestamp
-            if (methodConfig.stamp) {
-              const timeStamp = this.getTimeStamp();
-              output = Cli.colorize([`[${timeStamp}]`], color).concat(output);
-            }
-
-            // Use the console method obtained above, print the generated output
-            consoleMethod(...output);
-
-            // If the throws flag is set, and the force flag isn't allowed AND set
-            if (methodConfig.throws === true &amp;&amp; !(this.settings.allowForceNoThrow &amp;&amp; this.options.force)) {
-              // Throw the args as an error
-              throw new Error(args);
-            }
-          }
-        }
-      });
-    }
-  }
-
-  /**
    * Set the options from the process argument list (process.argv)
    */
   setOptions() {
@@ -249,28 +186,33 @@ class Cli {
    * Return the JSON structure for the usage message
    */
   getHelpSections() {
-    // Build simple config for command-line-usage module
-    return [
+    const sections = [
       {
-        header: this.settings.name,         // String - Main usage screen header
-        content: this.settings.description  // String - Main usage screen description
-      },
-      {
-        header: this.settings.helpHeader,           // String - Options header
-        optionList: this.settings.optionDefinitions // Array - Option definitions
+        header: this.getVersionString(),         // String - Main usage screen header
+        content: this.settings.description       // String - Main usage screen description
       }
     ];
-  }
 
-  /**
-   * Get the current Timestamp
-   */
-  getTimeStamp() {
-    // Create new Date object
-    const d = new Date();
+    Object.keys(this.settings.helpSections).forEach(header => {
+      let content = this.settings.helpSections[header];
 
-    // Return date in the format "M/D/YYYY h:i:s AM/PM"
-    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
+      if (Array.isArray(content)) {
+        content = content.join('\n');
+      }
+
+      sections.push({
+        header: header.charAt(0).toUpperCase() + header.slice(1),
+        content
+      });
+    });
+
+    sections.push({
+      header: this.settings.helpHeader,           // String - Options header
+      optionList: this.settings.optionDefinitions // Array - Option definitions
+    });
+
+    // Build simple config for command-line-usage module
+    return sections;
   }
 
   /**
@@ -284,50 +226,19 @@ class Cli {
     process.exit(0);
   }
 
+  getVersionString() {
+    return `${this.settings.name}  v${this.settings.version}`;
+  }
+
   /**
-   * Colorize each argument that is a string
-   * @param {string|array|object} args - Subject(s) to be colorized
-   * @param {string} color - The color (i.e. "red") to make the args
+   * Show the name and current version
    */
-  static colorize(args, color) {
-    // Verify the color is not an empty string, and it exists as a functions on the colors object
-    if (color.trim() !== '' &amp;&amp; typeof colors[color] === 'function') {
-      // If the arg passed is a string, just colorize it
-      if (typeof args === 'string') {
-        args = colors[color](args);
+  showVersion() {
+    // Show name and version
+    console.log(this.getVersionString());
 
-      // If the arg is an object
-      } else if (typeof args === 'object') {
-
-        // Check if it's an Array
-        if (Array.isArray(args)) {
-
-          // Loop through all items in the array
-          args.forEach((arg, i) => {
-
-            // If item is a string, override the item at args[i] with it colorized
-            if (typeof arg === 'string') {
-              args[i] = colors[color](arg);
-            }
-          });
-
-        // args is just an object
-        } else {
-
-          // Loop through object keys
-          Object.keys(args).forEach(key => {
-
-            // If item is a string, override the item at args[key] with it colorized
-            if (typeof args[key] === 'string') {
-              args[key] = colors[color](args[key]);
-            }
-          });
-        }
-      }
-    }
-
-    // Return colorized args
-    return args;
+    // Exit the process
+    process.exit(0);
   }
 
   /**
@@ -355,7 +266,7 @@ module.exports = Cli;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Mon Feb 06 2017 22:56:54 GMT-0700 (MST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 07 2017 23:57:52 GMT-0700 (MST)
 </footer>
 
 <script> prettyPrint(); </script>
