@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/cmr1/node-cli.svg?branch=master)](https://travis-ci.org/cmr1/node-cli)
+[![npm version](https://badge.fury.io/js/cmr1-cli.svg)](https://www.npmjs.com/package/cmr1-cli)
+[![build status](https://travis-ci.org/cmr1/node-cli.svg?branch=master)](https://travis-ci.org/cmr1/node-cli)
 
 # cli-node
 NodeJS CLI module
