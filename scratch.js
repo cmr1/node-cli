@@ -1,6 +1,6 @@
 'use strict';
 
-const Cmr1Cli = require('./lib/Cli');
+const Cmr1Cli = require('./lib/cli');
 
 const additionalOptions = [
   { 
