@@ -19,7 +19,7 @@
     "url": "https://github.com/cmr1/node-cli.git"
   },
   "dependencies": {
-    "cmr1-logger": "^0.1.1",
+    "cmr1-logger": "^0.1.2",
     "colors": "^1.1.2",
     "command-line-args": "^3.0.5",
     "command-line-usage": "^4.0.0",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "jsdoc": "^3.4.3",
+    "jsdoc": "^3.5.5",
     "mocha": "^3.2.0",
     "sinon": "^1.17.7"
   }
