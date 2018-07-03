@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = require('./lib/cli');
+module.exports = require('./lib/cli')

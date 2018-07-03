@@ -1,52 +1,51 @@
-'use strict';
+/* eslint-env mocha */
 
-const expect = require('chai').expect;
-const sinon = require('sinon');
+const expect = require('chai').expect
+const sinon = require('sinon')
 
-const Cli = require('../../');
+const Cli = require('../../')
 
-describe('Cli | Logging', function() {
-	let oldArgs = [];
-	let testCli = null;
+describe('Cli | Logging', function () {
+  let oldArgs = []
   const defaultArgs = [
     '/path/to/node',
     '/path/to/file'
-  ];
+  ]
 
-  beforeEach(function() {
-    this.sinon = sinon.sandbox.create();
+  beforeEach(function () {
+    this.sinon = sinon.sandbox.create()
 
-    oldArgs = process.argv;
-  });
+    oldArgs = process.argv
+  })
 
-  it('should support default logging methods', function() {
-    process.argv = Object.assign([], defaultArgs);
-    process.argv.push('--verbose');
+  it('should support default logging methods', function () {
+    process.argv = Object.assign([], defaultArgs)
+    process.argv.push('--verbose')
 
-    const testCli = new Cli();
+    const testCli = new Cli()
 
     Object.keys(testCli.settings.logging).forEach(method => {
-      const methodConfig = testCli.settings.logging[method];
-      const consoleMethod = (typeof console[method] === 'function' ? method : 'log');
+      const methodConfig = testCli.settings.logging[method]
+      const consoleMethod = (typeof console[method] === 'function' ? method : 'log')
 
-      this.sinon.stub(console, consoleMethod);
+      this.sinon.stub(console, consoleMethod)
 
       if (methodConfig.throws) {
-        expect(testCli[method]).to.throw(Error);
+        expect(testCli[method]).to.throw(Error)
       } else {
-        testCli[method](`Calling: ${method}`);            
+        testCli[method](`Calling: ${method}`)
       }
 
-      expect(console[consoleMethod].called).to.be.true;
+      expect(console[consoleMethod].called).to.eql(true)
 
-      this.sinon.restore();
-    });
-  });
+      this.sinon.restore()
+    })
+  })
 
-  afterEach(function() {
-  	this.sinon.restore();
+  afterEach(function () {
+    this.sinon.restore()
 
-  	process.argv = oldArgs;
-  	oldArgs = [];
-  });
-});
+    process.argv = oldArgs
+    oldArgs = []
+  })
+})

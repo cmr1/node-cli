@@ -7,10 +7,20 @@
     "test": "test"
   },
   "scripts": {
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') === -1) { console.log('\u001b[31mPlease use yarn for installing\u001b[0m'); process.exit(1); }\"",
+    "scan": "nsp check",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "pretest": "yarn lint && yarn scan",
     "test": "mocha test/**/*.spec.js",
     "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md && git add docs && git commit -m 'Generated Docs'",
     "preversion": "travis lint .travis.yml && npm run doc",
     "postversion": "git push --follow-tags"
+  },
+  "standard": {
+    "ignore": [
+      "docs/*"
+    ]
   },
   "author": "Charlie McClung",
   "license": "MIT",
@@ -30,6 +40,8 @@
     "chai": "^3.5.0",
     "jsdoc": "^3.5.5",
     "mocha": "^3.2.0",
-    "sinon": "^1.17.7"
+    "nsp": "^3.2.1",
+    "sinon": "^1.17.7",
+    "standard": "^11.0.1"
   }
 }

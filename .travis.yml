@@ -1,9 +1,8 @@
 language: node_js
 node_js:
-- 6
-- 7
-- 8
-- 9
+- '6'
+- '8'
+- '10'
 deploy:
   provider: npm
   email: admin@cmr1.com

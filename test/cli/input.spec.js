@@ -1,18 +1,17 @@
-'use strict';
+/* eslint-env mocha */
 
-const expect = require('chai').expect;
-const sinon = require('sinon');
-const readLineSync = require('readline-sync');
+const expect = require('chai').expect
+const sinon = require('sinon')
 
-const Cli = require('../../');
+const Cli = require('../../')
 
-describe('Cli | Input', function() {
-  let oldArgs = [];
+describe('Cli | Input', function () {
+  let oldArgs = []
 
-  const defaultArgs = [
-    '/path/to/node',
-    '/path/to/file'
-  ];
+  // const defaultArgs = [
+  //   '/path/to/node',
+  //   '/path/to/file'
+  // ]
 
   const inputMethods = [
     {
@@ -27,20 +26,20 @@ describe('Cli | Input', function() {
       cli: 'confirm',
       rls: 'keyInYN'
     }
-  ];
+  ]
 
-  beforeEach(function() {
-    this.sinon = sinon.sandbox.create();
+  beforeEach(function () {
+    this.sinon = sinon.sandbox.create()
 
-    oldArgs = process.argv;
-  });
+    oldArgs = process.argv
+  })
 
-  it('should have default cli input methods', function() {
-    const testCli = new Cli();
+  it('should have default cli input methods', function () {
+    const testCli = new Cli()
 
     inputMethods.forEach(methodConfig => {
-      expect(testCli[methodConfig.cli]).to.be.a('function');
-      
+      expect(testCli[methodConfig.cli]).to.be.a('function')
+
       // this.sinon.stub(readLineSync, methodConfig.rls);
 
       // testCli[methodConfig.cli]();
@@ -48,13 +47,13 @@ describe('Cli | Input', function() {
       // expect(readLineSync[methodConfig.rls].called).to.be.true;
 
       // this.sinon.restore();
-    });
-  });
+    })
+  })
 
-  afterEach(function() {
-    this.sinon.restore();
+  afterEach(function () {
+    this.sinon.restore()
 
-    process.argv = oldArgs;
-    oldArgs = [];
-  });
-});
+    process.argv = oldArgs
+    oldArgs = []
+  })
+})
