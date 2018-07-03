@@ -7,7 +7,6 @@
     "test": "test"
   },
   "scripts": {
-    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') === -1) { console.log('\u001b[31mPlease use yarn for installing\u001b[0m'); process.exit(1); }\"",
     "scan": "nsp check",
     "lint": "standard",
     "lint:fix": "standard --fix",
