@@ -26,65 +26,60 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
-
-// Require extend for merging settings
-const extend = require('extend');
+            <pre class="prettyprint source linenums"><code>// Require extend for merging settings
+const extend = require('extend')
 
 // Require basic Logger class to extend from
-const Logger = require('cmr1-logger');
+const Logger = require('cmr1-logger')
 
 // Require command-line-args to parse options from process.argv
-const clArgs = require('command-line-args');
+const clArgs = require('command-line-args')
 
 // Require command-line-usage to pair with clArgs to display usage info
 const getUsage = require('command-line-usage')
 
 // Require readline-sync for easy use of CLI input
-const readLineSync = require('readline-sync');
+const readLineSync = require('readline-sync')
 
 /**
  * Cli Helper Class
  */
 class Cli extends Logger {
-
   /**
    * Create a Cli object
    * @param {object} settings - The settings for this Cli object
    */
-  constructor(settings = {}) {
-    super();
+  constructor (settings = {}) {
+    super()
 
     // Most things happen here, wrap it all up
     try {
-
       // Initialize options and settings
-      this.options = {};
-      this.settings = Object.assign({}, Cli.DEFAULT_SETTINGS); // Copys defaults settings into a NEW OBEJCT
+      this.options = {}
+      this.settings = Object.assign({}, Cli.DEFAULT_SETTINGS) // Copys defaults settings into a NEW OBEJCT
 
       // Create Cli "alias" functions for reading input
-      this.select = readLineSync.keyInSelect;
-      this.prompt = readLineSync.question;
-      this.confirm = readLineSync.keyInYN;
+      this.select = readLineSync.keyInSelect
+      this.prompt = readLineSync.question
+      this.confirm = readLineSync.keyInYN
 
       // Merge provided settings with defaults
-      this.mergeSettings(settings);
+      this.mergeSettings(settings)
 
       // Enable the logging based on settings
-      this.enableLogging(this.settings.logging);
+      this.enableLogging(this.settings.logging)
 
       // Parse and set options based on settings
-      this.setOptions();
+      this.setOptions()
 
     // Catch an exception (Error)
     } catch (e) {
-
       // If we've already failed, force error output without throwing another Error
-      this.options.force = true;
+      this.options.force = true
 
       // Reference to logger function (
       // Verify function exists - thrown Error may have been from enableLogging() function
-      const logger = (typeof this.error === 'function' ? this.error : console.error);
+      const logger = (typeof this.error === 'function' ? this.error : console.error)
 
       // Print message using logger
       if (typeof e.message === 'string') {
@@ -92,25 +87,25 @@ class Cli extends Logger {
 
       // Print name using logger
       } else if (typeof e.name === 'string') {
-        logger(e.name);
+        logger(e.name)
 
       // Print the entire Error using logger
       } else {
-        logger(e);
+        logger(e)
       }
 
       // Output the entire error when verbose
-      this.debug('Caught Error:', e);
+      this.debug('Caught Error:', e)
 
       // Show the help menu &amp; exit the process
-      this.showHelp();
+      this.showHelp()
     }
-    
+
     // Show the help menu &amp; exit the process
     if (this.options.help) {
-      this.showHelp();
+      this.showHelp()
     } else if (this.options.version) {
-      this.showVersion();
+      this.showVersion()
     }
   }
 
@@ -118,139 +113,136 @@ class Cli extends Logger {
    * Merge settings from constructor with defaults
    * @param {object} settings - The settings for this Cli object
    */
-  mergeSettings(settings = {}) {
-
+  mergeSettings (settings = {}) {
     // Only attempt to merge objects
     if (typeof settings === 'object') {
-
       // Loop through all keys in the provided settings object
       Object.keys(settings).forEach(key => {
-
         // Obtain the value from the current key
-        const val = settings[key];
+        const val = settings[key]
 
         // If the types of the values match, merge them
         if (typeof this.settings[key] === typeof val) {
-          switch(typeof val) {
-
+          switch (typeof val) {
             // If the value is an object...
             case 'object':
               // If the both the default and the provided value are arrays, concat the two
               if (Array.isArray(this.settings[key]) &amp;&amp; Array.isArray(val)) {
-                this.settings[key] = this.settings[key].concat(val);
+                this.settings[key] = this.settings[key].concat(val)
 
               // If neither of the values are arrays, extend then (recursively)
               } else if (!Array.isArray(this.settings[key]) &amp;&amp; !Array.isArray(val)) {
-                this.settings[key] = extend(true, this.settings[key], val);
+                this.settings[key] = extend(true, this.settings[key], val)
 
               // Otherwise, we're attempting to merge incompatible settings!
               } else {
-                throw new Error(`Cannot override setting: '${key}' ... Type did not match!`);
+                throw new Error(`Cannot override setting: '${key}' ... Type did not match!`)
               }
-              break;
+              break
 
             // Otherwise, overwrite the value
             default:
-              this.settings[key] = val;
-              break;
+              this.settings[key] = val
+              break
           }
 
         // If there was no default, copy the new setting value!
         } else if (typeof this.settings[key] === 'undefined') {
-          this.settings[key] = val;
+          this.settings[key] = val
         }
-      });
+      })
     } else {
       // Throw an Error if settings argument is not an object
-      throw new Error('Invalid settings provided to merge function!');
+      throw new Error('Invalid settings provided to merge function!')
     }
   }
 
   /**
    * Set the options from the process argument list (process.argv)
    */
-  setOptions() {
+  setOptions () {
     // Set options on this instance using clArgs (command-line-args)
-    this.options = clArgs(this.settings.optionDefinitions);
+    this.options = clArgs(this.settings.optionDefinitions)
   }
 
   /**
    * Get parsed CLI options
    */
-  getOptions() {
+  getOptions () {
     // Return the options object
-    return this.options;
+    return this.options
   }
 
   /**
    * Return the JSON structure for the usage message
    */
-  getHelpSections() {
+  getHelpSections () {
     const sections = [
       {
-        header: this.getVersionString(),         // String - Main usage screen header
-        content: this.settings.description       // String - Main usage screen description
+        header: this.getVersionString(), // String - Main usage screen header
+        content: this.settings.description // String - Main usage screen description
       }
-    ];
+    ]
 
     Object.keys(this.settings.helpSections).forEach(header => {
-      let content = this.settings.helpSections[header];
+      let content = this.settings.helpSections[header]
 
       if (Array.isArray(content)) {
-        content = content.join('\n');
+        content = content.join('\n')
       }
 
       sections.push({
         header: header.charAt(0).toUpperCase() + header.slice(1),
         content
-      });
-    });
+      })
+    })
 
     sections.push({
-      header: this.settings.helpHeader,           // String - Options header
+      header: this.settings.helpHeader, // String - Options header
       optionList: this.settings.optionDefinitions // Array - Option definitions
-    });
+    })
 
     // Build simple config for command-line-usage module
-    return sections;
+    return sections
   }
 
   /**
    * Show the help menu &amp; exit
    */
-  showHelp() {
+  showHelp () {
     // Use console.log() for help (in case logging hasn't been enabled)
-    console.log(getUsage(this.getHelpSections()));
+    console.log(getUsage(this.getHelpSections()))
 
     // Exit the process
-    process.exit(0);
+    process.exit(0)
   }
 
-  getVersionString() {
-    return `${this.settings.name}  v${this.settings.version}`;
+  getVersionString () {
+    return `${this.settings.name}  v${this.settings.version}`
   }
 
   /**
    * Show the name and current version
    */
-  showVersion() {
+  showVersion () {
     // Show name and version
-    console.log(this.getVersionString());
+    console.log(this.getVersionString())
 
     // Exit the process
-    process.exit(0);
+    process.exit(0)
   }
 
   /**
    * Return the default settings from JSON file
    */
-  static get DEFAULT_SETTINGS() {
-    return require('../settings.json');
+  static get DEFAULT_SETTINGS () {
+    return require('../settings.json')
   }
 }
 
 // Export Cli class
-module.exports = Cli;</code></pre>
+module.exports = Cli
+</code></pre>
         </article>
     </section>
 
@@ -266,7 +258,7 @@ module.exports = Cli;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 05 2018 19:57:07 GMT-0700 (MST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 02 2018 23:15:19 GMT-0600 (MDT)
 </footer>
 
 <script> prettyPrint(); </script>
