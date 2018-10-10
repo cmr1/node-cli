@@ -7,10 +7,10 @@
     "test": "test"
   },
   "scripts": {
-    "scan": "nsp check",
+    "scan": "npm audit",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "pretest": "yarn lint && yarn scan",
+    "pretest": "npm run lint && npm run scan",
     "test": "mocha test/**/*.spec.js",
     "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md && git add docs && git commit -m 'Generated Docs'",
     "preversion": "travis lint .travis.yml && npm run doc",
@@ -38,8 +38,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "jsdoc": "^3.5.5",
-    "mocha": "^3.2.0",
-    "nsp": "^3.2.1",
+    "mocha": "^5.2.0",
     "sinon": "^1.17.7",
     "standard": "^11.0.1"
   }
