@@ -1,6 +1,6 @@
 {
   "name": "cmr1-cli",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Generic CLI helper",
   "main": "index.js",
   "directories": {
