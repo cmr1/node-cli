@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "jsdoc": "^3.5.5",
+    "jsdoc": "^3.6.2",
     "mocha": "^5.2.0",
     "sinon": "^1.17.7",
     "standard": "^11.0.1"
