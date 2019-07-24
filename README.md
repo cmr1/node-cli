@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/88c726978d8f6bf2e2f1/maintainability)](https://codeclimate.com/github/cmr1/node-cli/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/88c726978d8f6bf2e2f1/test_coverage)](https://codeclimate.com/github/cmr1/node-cli/test_coverage)
+
 [![npm version](https://badge.fury.io/js/cmr1-cli.svg)](https://www.npmjs.com/package/cmr1-cli)
 [![build status](https://travis-ci.org/cmr1/node-cli.svg?branch=master)](https://travis-ci.org/cmr1/node-cli)
 
