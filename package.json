@@ -11,8 +11,10 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "pretest": "npm run lint && npm run scan",
-    "test": "mocha test/**/*.spec.js",
+    "test": "nyc mocha test/**/*.spec.js && npm run nyc:report",
     "doc": "./node_modules/jsdoc/jsdoc.js lib/* -d docs -r README.md && git add docs && git commit -m 'Generated Docs'",
+    "nyc:check": "nyc check-coverage --lines 95 --functions 95 --branches 95",
+    "nyc:report": "nyc report --reporter=lcov",
     "preversion": "travis lint .travis.yml && npm run doc",
     "postversion": "git push --follow-tags"
   },
@@ -39,6 +41,7 @@
     "chai": "^3.5.0",
     "jsdoc": "^3.6.2",
     "mocha": "^5.2.0",
+    "nyc": "^14.1.1",
     "sinon": "^1.17.7",
     "standard": "^11.0.1"
   }

@@ -49,7 +49,15 @@ describe('Cli | Options', function () {
         process.argv = Object.assign([], defaultArgs)
         process.argv.push(opt)
 
-        const testCli = new Cli()
+        const testCli = new Cli({
+          helpSections: {
+            stuff: 'things',
+            multiline: [
+              'line1',
+              'line2'
+            ]
+          }
+        })
 
         expect(testCli).to.not.eql(undefined)
         expect(console.log.called).to.eql(true)
@@ -82,6 +90,143 @@ describe('Cli | Options', function () {
 
         this.sinon.restore()
       })
+    })
+  })
+
+  describe('version', function () {
+    it('should show version with version option', function () {
+      const options = [
+        '--version' // Version option
+      ]
+
+      options.forEach(opt => {
+        this.sinon.stub(console, 'log')
+        this.sinon.stub(process, 'exit')
+
+        process.argv = Object.assign([], defaultArgs)
+        process.argv.push(opt)
+
+        const testCli = new Cli()
+
+        expect(testCli).to.not.eql(undefined)
+        expect(console.log.called).to.eql(true)
+        expect(process.exit.calledOnce).to.eql(true)
+
+        this.sinon.restore()
+      })
+    })
+  })
+
+  describe('options', function () {
+    it('should parse options correctly and return with getOptions() method', function () {
+      const expecations = [
+        {
+          inputOptions: [
+            '--verbose'
+          ],
+          parsedOptions: {
+            verbose: true
+          }
+        },
+        {
+          inputOptions: [
+            '--force',
+            '--quiet'
+          ],
+          parsedOptions: {
+            force: true,
+            quiet: true
+          }
+        },
+        {
+          inputOptions: [
+            '-f',
+            '-q',
+            '-v'
+          ],
+          parsedOptions: {
+            force: true,
+            quiet: true,
+            verbose: true
+          }
+        }
+      ]
+
+      expecations.forEach(exp => {
+        process.argv = Object.assign([], defaultArgs)
+
+        exp.inputOptions.forEach(opt => {
+          process.argv.push(opt)
+        })
+
+        const testCli = new Cli()
+
+        expect(testCli).to.not.eql(undefined)
+        expect(testCli.getOptions()).to.eql(exp.parsedOptions)
+      })
+    })
+  })
+
+  describe('settings', function () {
+    it('should support custom settings & option definitions', function () {
+      process.argv = Object.assign([], defaultArgs)
+      process.argv.push('--option1')
+
+      const testCli = new Cli({
+        name: 'Test CLI',
+        customSetting: 'myValue',
+        optionDefinitions: [
+          {
+            name: 'option1',
+            description: 'option 1'
+          }
+        ]
+      })
+
+      expect(testCli).to.not.eql(undefined)
+      expect(testCli.getOptions()).to.eql({ option1: true })
+    })
+
+    it('should error if provided settings is not an object', function () {
+      this.sinon.stub(console, 'log')
+      this.sinon.stub(console, 'error')
+      this.sinon.stub(process, 'exit')
+
+      const attempt = () => {
+        const testCli = new Cli('settings')
+
+        expect(testCli).to.not.eql(undefined)
+      }
+
+      expect(attempt).not.to.throw()
+
+      expect(console.log.called).to.eql(true)
+      expect(console.error.called).to.eql(true)
+      expect(process.exit.calledOnce).to.eql(true)
+
+      this.sinon.restore()
+    })
+
+    it('should error is provided settings key does not match default type', function () {
+      this.sinon.stub(console, 'log')
+      this.sinon.stub(console, 'error')
+      this.sinon.stub(process, 'exit')
+
+      const attempt = () => {
+        const testCli = new Cli({
+          optionDefinitions: {
+            options: 'stuff'
+          }
+        })
+
+        expect(testCli).to.not.eql(undefined)
+      }
+
+      expect(attempt).not.to.throw()
+
+      expect(console.log.called).to.eql(true)
+      expect(console.error.called).to.eql(true)
+      expect(process.exit.calledOnce).to.eql(true)
     })
   })
 
